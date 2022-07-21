@@ -1,0 +1,90 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: '2022-07-21T15:39:51Z'
+  generation: 2
+  labels:
+    app: my-webapp-docker
+  name: my-webapp-docker
+  namespace: myproject
+  resourceVersion: '186683'
+  selfLink: >-
+    /apis/apps.openshift.io/v1/namespaces/myproject/deploymentconfigs/my-webapp-docker
+  uid: 5bef8c9d-090b-11ed-85f1-08002725fd16
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: my-webapp-docker
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: my-webapp-docker
+        deploymentconfig: my-webapp-docker
+    spec:
+      containers:
+        - image: >-
+            172.30.1.1:5000/myproject/my-webapp-docker@sha256:49e074cab502ca33a3a5f4c8c9ec077bb5c005a916253831fd6bf745950b4940
+          imagePullPolicy: Always
+          name: my-webapp-docker
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - my-webapp-docker
+        from:
+          kind: ImageStreamTag
+          name: 'my-webapp-docker:latest'
+          namespace: myproject
+        lastTriggeredImage: >-
+          172.30.1.1:5000/myproject/my-webapp-docker@sha256:49e074cab502ca33a3a5f4c8c9ec077bb5c005a916253831fd6bf745950b4940
+      type: ImageChange
+    - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: '2022-07-21T15:40:12Z'
+      lastUpdateTime: '2022-07-21T15:40:12Z'
+      message: Deployment config has minimum availability.
+      status: 'True'
+      type: Available
+    - lastTransitionTime: '2022-07-21T15:40:10Z'
+      lastUpdateTime: '2022-07-21T15:40:13Z'
+      message: replication controller "my-webapp-docker-1" successfully rolled out
+      reason: NewReplicationControllerAvailable
+      status: 'True'
+      type: Progressing
+  details:
+    causes:
+      - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1
